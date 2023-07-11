@@ -1,0 +1,43 @@
+// Подключение библиотеки для работы с PIR-датчиком
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+#include <DHT_U.h>
+
+// Пин для подключения PIR-датчика
+const int pirPin = 2;
+// Пин для подключения зуммера или пьезоэлемента
+const int buzzerPin = 3;
+
+// Объект для работы с PIR-датчиком
+Adafruit_PIRSensor pir = Adafruit_PIRSensor();
+
+void setup() {
+  // Инициализация PIR-датчика
+  pir.begin(pirPin, PIR_SENSOR_REVERSE);
+  
+  // Настройка пина для зуммера или пьезоэлемента
+  pinMode(buzzerPin, OUTPUT);
+  
+  // Отключение сигнализации в начале работы
+  digitalWrite(buzzerPin, LOW);
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Получение состояния PIR-датчика
+  int motion = pir.motionDetected();
+
+  // Если обнаружено движение
+  if (motion) {
+    // Включение сигнализации
+    digitalWrite(buzzerPin, HIGH);
+    Serial.println("Движение обнаружено!");
+    delay(500); // Длительность звукового сигнала
+  } else {
+    // Отключение сигнализации
+    digitalWrite(buzzerPin, LOW);
+  }
+  
+  delay(100); // Задержка между итерациями цикла
+}
